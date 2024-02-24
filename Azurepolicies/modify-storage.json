@@ -1,0 +1,47 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Storage/storageAccounts"
+        },
+        {
+          "field": "Microsoft.Storage/storageAccounts/allowBlobPublicAccess",
+          "exists": "true" // Check if public access is enabled
+        }
+      ]
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details": {
+        "conflictEffect": "audit",
+        "roleDefinitionIds": ["/providers/Microsoft.Authorization/roleDefinitions/17d1049b-9a84-46fb-8f53-869881c3d3ab"],
+        //storage account contributor role
+        "operations": [
+          {
+            "operation": "addOrReplace", // Set or update the property
+            "field": "Microsoft.Storage/storageAccounts/allowBlobPublicAccess",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enforcement Action",
+        "description": "Determines how the policy responds to violations: Modify (enforce), Audit (log), Disabled (no action)"
+      },
+      "allowedValues": [
+        "Modify",
+        "Audit",
+        "Disabled"
+      ],
+      "defaultValue": "Modify"
+    }
+  }
+}
