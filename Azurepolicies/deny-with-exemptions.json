@@ -1,0 +1,26 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Storage/storageAccounts"
+        },
+        {
+          "field": "Microsoft.Storage/storageAccounts/allowBlobPublicAccess",
+          "exists": "true"
+        },
+        {
+          "not": {
+            "field": "tags['sorry']",
+            "equals": "shaktiman"
+          }
+        }
+      ]
+    },
+    "then": {
+      "effect": "Deny"
+    }
+  }
+}
